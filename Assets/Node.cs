@@ -10,6 +10,7 @@ public class Node : MonoBehaviour
     {
         Debug.Log("Create Node");
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sortingOrder = 1;
     }
 
     // Update is called once per frame
