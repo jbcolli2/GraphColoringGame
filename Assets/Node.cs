@@ -20,6 +20,7 @@ public class Node : MonoBehaviour
 
     static bool isNodeMoving = false;
     static Node movingNode = null;
+    Vector3 firstClickOffset;
 
 
     // Start is called before the first frame update
@@ -88,12 +89,28 @@ public class Node : MonoBehaviour
         }
 
 
-        if(isNodeMoving && movingNode == this)
-        {
-            Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = new Vector3(newPos.x, newPos.y);
-        }
+        //if(isNodeMoving && movingNode == this && Input.GetMouseButton(0))
+        //{
+        //    Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    transform.position = new Vector3(newPos.x, newPos.y);
+        //}
     }
+
+    private void OnMouseDown()
+    {
+        GameManager.instance.PlayerMove(this);
+        firstClickOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        firstClickOffset.z = 0;
+    }
+
+    private void OnMouseDrag()
+    {
+        Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        transform.position = new Vector3(newPos.x, newPos.y) + firstClickOffset;
+    }
+
+
+
 
     public void setColor(Color color)
     {

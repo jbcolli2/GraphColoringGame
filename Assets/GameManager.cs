@@ -27,14 +27,19 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     TMP_Text currentPlayerText;
 
-    static Color currentColor = Color.red;
+    public Color currentColor { get; private set; }
     Player currentPlayer = Player.Alice;
+
+    public static GameManager instance { get; private set; }
 
 
 
     // Start is called before the first frame update
     void Awake()
     {
+        instance = this;
+        currentColor = Color.red;
+
         // Set up the adj matrix
         adjMatrix.Add(new List<int>() { 1, 2 });
         adjMatrix.Add(new List<int>() { 0, 2 });
@@ -82,11 +87,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            AttemptPlayerMove();
-
-        }
+        
     }
 
 
@@ -100,36 +101,42 @@ public class GameManager : MonoBehaviour
 
 
 
-    bool AttemptPlayerMove()
+    bool SelectNode(out Node node)
     {
-        bool didColor = false;
+        bool didSelectNode = false;
+        node = null;
        
         RaycastHit rayHit = new RaycastHit();
 
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
         {
-            Node node = rayHit.collider.gameObject.GetComponent<Node>();
-            if (node.isProperColoring(currentColor))
+            node = rayHit.collider.gameObject.GetComponent<Node>();
+            if(node)
             {
-                ExePlayerMove(node);
-                didColor = true;
+                didSelectNode = true;
             }
-            else
-            {
-                messageText.SetTemporaryText("That is not a proper coloring");
-            }
+            
         }
+        
 
         
 
-        return didColor;
+        return didSelectNode;
     }
 
 
-    void ExePlayerMove(Node node)
+    public void PlayerMove(Node node)
     {
-        node.setColor(currentColor);
-        currentPlayer = currentPlayer == Player.Alice ? Player.Bob : Player.Alice;
-        currentPlayerText.text = currentPlayer.ToString();
+        if (node.isProperColoring(currentColor))
+        {
+            node.setColor(currentColor);
+            currentPlayer = currentPlayer == Player.Alice ? Player.Bob : Player.Alice;
+            currentPlayerText.text = currentPlayer.ToString();
+        }
+        else
+        {
+            messageText.SetTemporaryText("That is not a proper coloring");
+        }
+        
     }
 }
