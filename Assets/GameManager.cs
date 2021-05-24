@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 
@@ -29,6 +30,13 @@ public class GameManager : MonoBehaviour
 
     public Color currentColor { get; private set; }
     Player currentPlayer = Player.Alice;
+    public Color blankColor = Color.white;
+    public int numColors;
+    //[System.NonSerialized]
+    public List<Color> colors = new List<Color>();
+    [SerializeField]
+    Image[] colorImages;
+    int numNodesColored;
 
     public static GameManager instance { get; private set; }
 
@@ -38,7 +46,11 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        currentColor = Color.red;
+        currentColor = blankColor;
+        numColors = 3;
+
+        setColors();
+        numNodesColored = 0;
 
         // Set up the adj matrix
         adjMatrix.Add(new List<int>() { 1, 2 });
@@ -127,16 +139,39 @@ public class GameManager : MonoBehaviour
 
     public void PlayerMove(Node node)
     {
-        if (node.isProperColoring(currentColor))
+        node.setColor(currentColor);
+        currentPlayer = currentPlayer == Player.Alice ? Player.Bob : Player.Alice;
+        currentPlayerText.text = currentPlayer.ToString();
+        numNodesColored += 1;
+
+        SetMessageText("Game Over = " + node.isGameOver()  +".  Bob Wins!!!");
+        if(numNodesColored == nodes.Count)
         {
-            node.setColor(currentColor);
-            currentPlayer = currentPlayer == Player.Alice ? Player.Bob : Player.Alice;
-            currentPlayerText.text = currentPlayer.ToString();
+            SetMessageText("Alice Wins!!!");
         }
-        else
+         
+    }
+
+
+
+
+
+
+    public void SetMessageText(string text)
+    {
+        messageText.SetTemporaryText(text);
+    }
+
+
+    void setColors()
+    {
+        for (int ii = 0; ii < colorImages.Length; ++ii)
         {
-            messageText.SetTemporaryText("That is not a proper coloring");
+            if (ii >= numColors)
+            {
+                break;
+            }
+            colors.Add(colorImages[ii].color);
         }
-        
     }
 }

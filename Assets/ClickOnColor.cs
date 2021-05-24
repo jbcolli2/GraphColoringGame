@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class ClickOnColor : MonoBehaviour, IPointerDownHandler
 {
-    public GameManager gameManager;
 
     Image image;
     private void Start()
@@ -18,6 +17,6 @@ public class ClickOnColor : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData pointerEventData)
     {
-        gameManager.setCurrentColor(image.color);
+        GameManager.instance.setCurrentColor(image.color);
     }
 }

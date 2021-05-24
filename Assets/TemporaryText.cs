@@ -15,7 +15,6 @@ public class TemporaryText : MonoBehaviour
     public void SetTemporaryText(string text)
     {
         timer = 0;
-        Debug.Log("Reset timer");
         textbox.text = text;
 
     }

@@ -15,11 +15,10 @@ public class Node : MonoBehaviour
     List<Edge> edges = new List<Edge>();
 
 
-    Color currentColor = Color.white;
+    Color currentColor;
+    bool isColored;
 
 
-    static bool isNodeMoving = false;
-    static Node movingNode = null;
     Vector3 firstClickOffset;
 
 
@@ -37,7 +36,7 @@ public class Node : MonoBehaviour
         // Place vert
         this.adjNodes = adjNodes;
         setPosition(pos);
-        setColor(Color.white);
+        clearColor();
 
         // Create edges
         for(int ii = 0; ii < adjNodes.Count; ++ii)
@@ -68,39 +67,34 @@ public class Node : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            RaycastHit rayHit = new RaycastHit();
 
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
-            {
-                if(rayHit.collider.gameObject.GetComponent<Node>())
-                {
-                    isNodeMoving = true;
-                    movingNode = rayHit.collider.gameObject.GetComponent<Node>();
-                }
-            }
-        }
-
-        if(Input.GetMouseButtonUp(0))
-        {
-            isNodeMoving = false;
-            movingNode = null;
-        }
-
-
-        //if(isNodeMoving && movingNode == this && Input.GetMouseButton(0))
-        //{
-        //    Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //    transform.position = new Vector3(newPos.x, newPos.y);
-        //}
+        
     }
 
     private void OnMouseDown()
     {
-        GameManager.instance.PlayerMove(this);
+        bool illegalMove = false;
+        if(!isProperColoring(GameManager.instance.currentColor))
+        {
+            illegalMove = true;
+            GameManager.instance.SetMessageText("That is not a proper coloring");
+        }
+        if(isColored)
+        {
+            illegalMove = true;
+            GameManager.instance.SetMessageText("That node is already colored");
+        }
+        if(!illegalMove)
+        {
+            GameManager.instance.PlayerMove(this);
+        }
+
+
+
+        //Store offset for where first clicked on node
         firstClickOffset = transform.position - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         firstClickOffset.z = 0;
+
     }
 
     private void OnMouseDrag()
@@ -109,6 +103,72 @@ public class Node : MonoBehaviour
         transform.position = new Vector3(newPos.x, newPos.y) + firstClickOffset;
     }
 
+    private void OnMouseUp()
+    {
+        firstClickOffset = new Vector3(0,0,0);
+    }
+
+
+
+
+
+
+    // Game Logic Methods
+    public bool isNodeColorable()
+    {
+
+        if(adjNodes.Count < GameManager.instance.numColors)
+        {
+            return true;
+        }
+
+        var availableColors = GameManager.instance.colors;
+
+        foreach(Node node in adjNodes)
+        {
+            if(availableColors.Contains(node.currentColor))
+            {
+                availableColors.Remove(node.currentColor);
+            }
+        }
+
+
+        if (availableColors.Count == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+    }
+
+
+
+    public bool isGameOver()
+    {
+        foreach(Node node in adjNodes)
+        {
+            if(!node.isNodeColorable())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -116,6 +176,14 @@ public class Node : MonoBehaviour
     {
         spriteRenderer.color = color;
         currentColor = color;
+        isColored = true;
+    }
+
+    public void clearColor()
+    {
+        spriteRenderer.color = GameManager.instance.blankColor;
+        currentColor = GameManager.instance.blankColor;
+        isColored = false;
     }
 
     public void setPosition(Vector2 nodePos)
