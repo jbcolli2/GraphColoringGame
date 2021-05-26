@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,10 @@ public class GameManager : MonoBehaviour
     TemporaryText messageText;
     [SerializeField]
     TMP_Text currentPlayerText;
+    [SerializeField]
+    Image gameOverBox;
+    [SerializeField]
+    TMP_InputField numColorsInput;
 
     public Color currentColor { get; private set; }
     Player currentPlayer = Player.Alice;
@@ -42,15 +47,29 @@ public class GameManager : MonoBehaviour
 
 
 
+
+ 
+
+
     // Start is called before the first frame update
     void Awake()
     {
         instance = this;
-        currentColor = blankColor;
-        numColors = 3;
 
         setColors();
+        foreach (Color color in colors)
+        {
+            Debug.Log(color);
+        }
+        SetNumColors(3);
+        currentColor = colors[0];
         numNodesColored = 0;
+
+
+
+
+
+
 
         // Set up the adj matrix
         adjMatrix.Add(new List<int>() { 1, 2 });
@@ -86,6 +105,7 @@ public class GameManager : MonoBehaviour
 
 
         SetupGameGUI();
+        numColorsInput.onEndEdit.AddListener(delegate { SetNumColors(Int16.Parse(numColorsInput.text)); });
 
     }
 
@@ -94,12 +114,16 @@ public class GameManager : MonoBehaviour
     void SetupGameGUI()
     {
         currentPlayerText.text = currentPlayer.ToString();
+        gameOverBox.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            ResetGame();
+        }
     }
 
 
@@ -144,16 +168,34 @@ public class GameManager : MonoBehaviour
         currentPlayerText.text = currentPlayer.ToString();
         numNodesColored += 1;
 
-        SetMessageText("Game Over = " + node.isGameOver()  +".  Bob Wins!!!");
         if(numNodesColored == nodes.Count)
         {
-            SetMessageText("Alice Wins!!!");
+            gameOverBox.GetComponentInChildren<TMP_Text>().text = "Alice Wins!!!";
+            gameOverBox.gameObject.SetActive(true);
+        }
+        if(node.isGameOver())
+        {
+            gameOverBox.gameObject.SetActive(true);
+            gameOverBox.GetComponentInChildren<TMP_Text>().text = "Bob Wins!!!";
         }
          
     }
 
 
 
+    public void ResetGame()
+    {
+        gameOverBox.gameObject.SetActive(false);
+        currentColor = colors[0];
+        currentPlayer = Player.Alice;
+        numNodesColored = 0;
+        SetupGameGUI();
+
+        foreach (Node node in nodes)
+        {
+            node.clearColor();
+        }
+    }
 
 
 
@@ -163,14 +205,38 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void SetNumColors(int numColors)
+    {
+        this.numColors = numColors;
+
+        for(int ii = 0; ii < colorImages.Length; ++ii)
+        {
+            if(ii < this.numColors)
+            {
+                colorImages[ii].gameObject.SetActive(true);
+            }
+            else
+            {
+                colorImages[ii].gameObject.SetActive(false);
+            }
+        }
+
+        setColors();
+
+        ResetGame();
+    }
+
+
     void setColors()
     {
+        colors.Clear();
         for (int ii = 0; ii < colorImages.Length; ++ii)
         {
             if (ii >= numColors)
             {
                 break;
             }
+            Debug.Log(numColors);
             colors.Add(colorImages[ii].color);
         }
     }

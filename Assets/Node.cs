@@ -122,8 +122,9 @@ public class Node : MonoBehaviour
             return true;
         }
 
-        var availableColors = GameManager.instance.colors;
+        List<Color> availableColors = new List<Color>(GameManager.instance.colors.ToArray());
 
+        
         foreach(Node node in adjNodes)
         {
             if(availableColors.Contains(node.currentColor))
