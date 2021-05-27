@@ -12,9 +12,14 @@ public class TemporaryText : MonoBehaviour
     TMP_Text textbox;
 
 
-    public void SetTemporaryText(string text)
+    public void SetTemporaryText(string text, float delayTime=0)
     {
         timer = 0;
+
+        if (delayTime != 0)
+        {
+            timer = this.delayTime - delayTime;
+        }
         textbox.text = text;
 
     }

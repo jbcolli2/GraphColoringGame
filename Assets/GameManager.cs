@@ -29,8 +29,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     TMP_Text currentPlayerText;
     [SerializeField]
-    Image gameOverBox;
-    [SerializeField]
     TMP_InputField numColorsInput;
 
     public Color currentColor { get; private set; }
@@ -41,7 +39,12 @@ public class GameManager : MonoBehaviour
     public List<Color> colors = new List<Color>();
     [SerializeField]
     Image[] colorImages;
+    Image currentImage;
     int numNodesColored;
+    [SerializeField]
+    Sprite squareColorSprite;
+    [SerializeField]
+    Sprite circleColorSprite;
 
     public static GameManager instance { get; private set; }
 
@@ -62,12 +65,12 @@ public class GameManager : MonoBehaviour
             Debug.Log(color);
         }
         SetNumColors(3);
-        currentColor = colors[0];
+        currentImage = colorImages[0];
+        setCurrentColor(colorImages[0]);
         numNodesColored = 0;
 
 
-
-
+        
 
 
 
@@ -114,7 +117,6 @@ public class GameManager : MonoBehaviour
     void SetupGameGUI()
     {
         currentPlayerText.text = currentPlayer.ToString();
-        gameOverBox.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -129,9 +131,12 @@ public class GameManager : MonoBehaviour
 
 
 
-    public void setCurrentColor(Color color)
+    public void setCurrentColor(Image image)
     {
-        currentColor = color;
+        currentColor = image.color;
+        currentImage.sprite = squareColorSprite;
+        currentImage = image;
+        currentImage.sprite = circleColorSprite;
     }
 
 
@@ -170,13 +175,11 @@ public class GameManager : MonoBehaviour
 
         if(numNodesColored == nodes.Count)
         {
-            gameOverBox.GetComponentInChildren<TMP_Text>().text = "Alice Wins!!!";
-            gameOverBox.gameObject.SetActive(true);
+            SetMessageText("!!!!!!  Alice Wins  !!!!!!!", 4);
         }
         if(node.isGameOver())
         {
-            gameOverBox.gameObject.SetActive(true);
-            gameOverBox.GetComponentInChildren<TMP_Text>().text = "Bob Wins!!!";
+            SetMessageText("!!!!!!  Bob Wins  !!!!!!!", 4);
         }
          
     }
@@ -185,7 +188,6 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        gameOverBox.gameObject.SetActive(false);
         currentColor = colors[0];
         currentPlayer = Player.Alice;
         numNodesColored = 0;
@@ -199,9 +201,9 @@ public class GameManager : MonoBehaviour
 
 
 
-    public void SetMessageText(string text)
+    public void SetMessageText(string text, float delayTime=0)
     {
-        messageText.SetTemporaryText(text);
+        messageText.SetTemporaryText(text, delayTime);
     }
 
 
@@ -236,7 +238,6 @@ public class GameManager : MonoBehaviour
             {
                 break;
             }
-            Debug.Log(numColors);
             colors.Add(colorImages[ii].color);
         }
     }

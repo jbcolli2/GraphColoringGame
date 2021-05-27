@@ -17,6 +17,6 @@ public class ClickOnColor : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData pointerEventData)
     {
-        GameManager.instance.setCurrentColor(image.color);
+        GameManager.instance.setCurrentColor(image);
     }
 }
