@@ -19,6 +19,7 @@ public class Node : MonoBehaviour
     bool isColored;
 
 
+
     Vector3 firstClickOffset;
 
 
@@ -56,21 +57,7 @@ public class Node : MonoBehaviour
 
 
 
-    public bool isProperColoring(Color newColor)
-    {
-        bool isProperColor = true;
-        foreach(Node adjNode in adjNodes)
-        {
-            // If an adjecent node has same color as potential coloring
-            if(newColor == adjNode.currentColor)
-            {
-                return false;
-            }
-        }
-
-
-        return true;
-    }
+    
 
 
     // Update is called once per frame
@@ -82,21 +69,11 @@ public class Node : MonoBehaviour
 
     private void OnMouseDown()
     {
-        bool illegalMove = false;
-        if(!isProperColoring(GameManager.instance.currentColor))
+        if(GameManager.instance.gameObject.activeSelf)
         {
-            illegalMove = true;
-            GameManager.instance.SetMessageText("That is not a proper coloring");
+            MakeGameMove();
         }
-        if(isColored)
-        {
-            illegalMove = true;
-            GameManager.instance.SetMessageText("That node is already colored");
-        }
-        if(!illegalMove)
-        {
-            GameManager.instance.PlayerMove(this);
-        }
+
 
 
 
@@ -118,6 +95,44 @@ public class Node : MonoBehaviour
     }
 
 
+
+
+    void MakeGameMove()
+    {
+        bool illegalMove = false;
+        if (!isProperColoring(GameManager.instance.currentColor))
+        {
+            illegalMove = true;
+            GameManager.instance.SetMessageText("That is not a proper coloring");
+        }
+        if (isColored)
+        {
+            illegalMove = true;
+            GameManager.instance.SetMessageText("That node is already colored");
+        }
+        if (!illegalMove)
+        {
+            GameManager.instance.PlayerMove(this);
+        }
+    }
+
+
+
+    public bool isProperColoring(Color newColor)
+    {
+        bool isProperColor = true;
+        foreach (Node adjNode in adjNodes)
+        {
+            // If an adjecent node has same color as potential coloring
+            if (newColor == adjNode.currentColor)
+            {
+                return false;
+            }
+        }
+
+
+        return true;
+    }
 
 
 

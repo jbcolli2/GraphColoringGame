@@ -51,96 +51,59 @@ public class GameManager : MonoBehaviour
 
 
 
- 
+    public GameManager()
+    {
+        instance = this;
+    }
 
 
     // Start is called before the first frame update
     void Awake()
     {
-        instance = this;
+        
         currentImage = colorImages[0];
         numNodesColored = 0;
 
         setColors();
-        foreach (Color color in colors)
-        {
-            Debug.Log(color);
-        }
         SetNumColors(3);
         
         setCurrentColor(colorImages[0]);
 
+    }
 
 
 
 
 
-        //int[,] adj = new int[N, N];
-
-        //for(int ii = 0; ii<N; ++ii)
-        //{
-        //    for(int jj = 0; jj < N; ++jj)
-        //    {
-        //        adj[ii, jj] = 0;
-        //    }
-        //}
-
-        int[,] adj = CreateN11Adj();
+    private void OnEnable()
+    {
+        int[,] adj = CreateN11Adj(12);
 
 
-        //adj[0, 1] = 1;
-        //adj[1, 2] = 1;
-        //adj[1, 6] = 1;
-        //adj[1, 7] = 1;
-        //adj[2, 3] = 1;
-        //adj[2, 8] = 1;
-        //adj[2, 9] = 1;
-        //adj[3, 4] = 1;
-        //adj[3, 10] = 1;
-        //adj[3, 11] = 1;
-        //adj[4, 5] = 1;
-        //adj[4, 12] = 1;
-        //adj[4, 13] = 1;
-
-        //for(int ii = 0; ii < N; ++ii)
-        //{
-        //    for(int jj = ii; jj < N; ++jj)
-        //    {
-        //        if(adj[ii,jj] == 1)
-        //        {
-        //            adj[jj, ii] = 1;
-        //        }
-        //    }
-        //}
 
 
-            
 
         // Set up the adj matrix
-        for(int ii = 0; ii < N; ++ii)
+        for (int ii = 0; ii < N; ++ii)
         {
             adjMatrix.Add(new List<int>());
-            for(int jj = 0; jj < N; ++jj)
+            for (int jj = 0; jj < N; ++jj)
             {
-                if(adj[ii,jj] == 1)
+                if (adj[ii, jj] == 1)
                 {
                     adjMatrix[ii].Add(jj);
                 }
             }
         }
 
-        //adjMatrix.Add(new List<int>() { 1, 2 });
-        //adjMatrix.Add(new List<int>() { 0, 2 });
-        //adjMatrix.Add(new List<int>() { 0, 1,3 });
-        //adjMatrix.Add(new List<int>() { 2 });
+
 
         nodes = SetupGraph(adjMatrix);
-       
+
 
 
         SetupGameGUI();
         numColorsInput.onEndEdit.AddListener(delegate { SetNumColors(Int16.Parse(numColorsInput.text)); });
-
     }
 
 
@@ -331,8 +294,10 @@ public class GameManager : MonoBehaviour
     }
 
 
-    int[,] CreateN11Adj()
+    int[,] CreateN11Adj(int N)
     {
+        this.N = N;
+
         int[,] adj = CreateZeroAdj(N);
 
 
@@ -342,6 +307,8 @@ public class GameManager : MonoBehaviour
         }
         adj[N - 1, 0] = 1;
 
+        adj = MakeSymmetric(adj, N);
+
         return adj;
     }
 
@@ -349,9 +316,9 @@ public class GameManager : MonoBehaviour
     int[,] CreateCatAdj()
     {
         N = 14;
+
         int[,] adj = CreateZeroAdj(N);
         
-
 
 
         adj[0, 1] = 1;
@@ -381,5 +348,22 @@ public class GameManager : MonoBehaviour
 
 
         return adj;
+    }
+
+
+    int[,] MakeSymmetric(int[,] M, int N)
+    {
+        for (int ii = 0; ii < N; ++ii)
+        {
+            for (int jj = ii; jj < N; ++jj)
+            {
+                if (M[ii, jj] == 1)
+                {
+                    M[jj, ii] = 1;
+                }
+            }
+        }
+
+        return M;
     }
 }
