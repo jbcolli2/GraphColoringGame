@@ -31,17 +31,26 @@ public class Node : MonoBehaviour
 
 
 
-    public void Setup(Vector2 pos, List<Node> adjNodes)
+    public void Setup(Vector2 pos, List<Node> adjNodes = null)
     {
+
+        if(adjNodes == null)
+        {
+            this.adjNodes = new List<Node>();
+        }
+        else
+        {
+            this.adjNodes = adjNodes;
+        }
+
         // Place vert
-        this.adjNodes = adjNodes;
         setPosition(pos);
-        clearColor();
+        //clearColor();
 
         // Create edges
-        for(int ii = 0; ii < adjNodes.Count; ++ii)
+        for(int ii = 0; ii < this.adjNodes.Count; ++ii)
         {
-            Instantiate<Edge>(edgePrefab).Setup(this, adjNodes[ii]);
+            Instantiate<Edge>(edgePrefab).Setup(this, this.adjNodes[ii]);
         }
     }
 

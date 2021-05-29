@@ -6,8 +6,5 @@ using TMPro;
 
 public class NumColorsInput : MonoBehaviour
 {
-    void OnEndEdit()
-    {
-
-    }
+    
 }
