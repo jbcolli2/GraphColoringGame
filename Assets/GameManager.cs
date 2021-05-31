@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 {
     int N = 14;
     List<List<int>> adjMatrix = new List<List<int>>();
-    List<Node> nodes = new List<Node>();
+    public List<Node> nodes = new List<Node>();
     float drawRadius = 3.0f;
 
 
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
 
 
 
-        nodes = SetupGraph(adjMatrix);
+        //nodes = SetupGraph(adjMatrix);
 
 
 

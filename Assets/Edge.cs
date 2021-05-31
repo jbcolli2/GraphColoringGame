@@ -48,4 +48,19 @@ public class Edge : MonoBehaviour
         line.SetPosition(0, node0.transform.position);
         line.SetPosition(1, node1.transform.position);
     }
+
+    public void SetNode0(Node node)
+    {
+        node0 = node;
+    }
+
+    public void SetNode1(Node node)
+    {
+        node1 = node;
+    }
+
+    public Node GetNode0()
+    {
+        return node0;
+    }
 }

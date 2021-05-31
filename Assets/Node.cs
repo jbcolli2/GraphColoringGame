@@ -56,6 +56,29 @@ public class Node : MonoBehaviour
     }
 
 
+    public void AddToAdjList(Node node)
+    {
+        if(adjNodes != null)
+        {
+            if(!adjNodes.Contains(node))
+            {
+                adjNodes.Add(node);
+            }
+        }
+    }
+
+
+    public bool AdjNodesContains(Node node)
+    {
+        if(adjNodes != null)
+        {
+            return adjNodes.Contains(node);
+        }
+
+        return false;
+    }
+
+
 
     
 
@@ -214,5 +237,11 @@ public class Node : MonoBehaviour
     public void setPosition(Vector2 nodePos)
     {
         transform.position = new Vector3(nodePos.x, nodePos.y);
+    }
+
+    public void setPosition(Vector3 nodePos)
+    {
+        Vector3 newNodePos = new Vector3(nodePos.x, nodePos.y);
+        transform.position = newNodePos;
     }
 }

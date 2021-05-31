@@ -25,6 +25,8 @@ public class ChangeGameUI : MonoBehaviour
 
             gameManager.gameObject.SetActive(false);
             gameUI.gameObject.SetActive(false);
+
+            EditorManager.instance.nodes = GameManager.instance.nodes;
         }
         else
         {
@@ -33,6 +35,8 @@ public class ChangeGameUI : MonoBehaviour
 
             gameManager.gameObject.SetActive(true);
             gameUI.gameObject.SetActive(true);
+
+            GameManager.instance.nodes = EditorManager.instance.nodes;
         }
     }
 }
