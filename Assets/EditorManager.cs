@@ -24,14 +24,50 @@ public class EditorManager : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0) && isPlacingNodes)
         {
+            Vector3 mousePos = Input.mousePosition;
+            if (isInGraphArea(mousePos))
+            {
                 Node node = Instantiate<Node>(nodePrefab);
-                Vector3 tempPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 tempPos = Camera.main.ScreenToWorldPoint(mousePos);
                 node.Setup(new Vector2(tempPos.x, tempPos.y));
                 nodes.Add(node);
+            }
         }
     }
 
 
+
+    bool isOnNode(Vector3 mousePos)
+    {
+        RaycastHit rayHit = new RaycastHit();
+
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out rayHit))
+        {
+            if (rayHit.collider.gameObject.GetComponent<Node>())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+    bool isInGraphArea(Vector3 mousePos)
+    {
+        RaycastHit rayHit = new RaycastHit();
+
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out rayHit))
+        {
+            if(rayHit.collider.gameObject.GetComponent<SpriteMask>())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
     public void SetPlacingNodes(bool placeNodes)
