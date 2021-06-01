@@ -45,8 +45,15 @@ public class Edge : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        line.SetPosition(0, node0.transform.position);
-        line.SetPosition(1, node1.transform.position);
+        if(node0 != null)
+        {
+            line.SetPosition(0, node0.transform.position);
+        }
+        if(node1 != null)
+        {
+            line.SetPosition(1, node1.transform.position);
+        }
+        
     }
 
     public void SetNode0(Node node)

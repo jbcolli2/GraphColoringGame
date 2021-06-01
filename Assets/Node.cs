@@ -51,9 +51,30 @@ public class Node : MonoBehaviour
         // Create edges
         for(int ii = 0; ii < this.adjNodes.Count; ++ii)
         {
-            Instantiate<Edge>(edgePrefab).Setup(this, this.adjNodes[ii]);
+            edges.Add(Instantiate<Edge>(edgePrefab));
+            edges[edges.Count-1].Setup(this, this.adjNodes[ii]);
         }
     }
+
+    private void OnDestroy()
+    {
+        // When a node gets destroyed, we need to also get rid of all the edges attached to it.
+        // We also need to tell the other nodes that they are not connected to this node anymore.
+        foreach(Edge edge in edges)
+        {
+            Destroy(edge.gameObject);
+        }
+
+
+        foreach(Node node in adjNodes)
+        {
+            node.adjNodes.RemoveAll(x => x == this);
+        }
+    }
+
+
+
+
 
 
     public void AddToAdjList(Node node)
@@ -79,6 +100,11 @@ public class Node : MonoBehaviour
     }
 
 
+
+    public void AddToEdgeList(Edge edge)
+    {
+        edges.Add(edge);
+    }
 
     
 

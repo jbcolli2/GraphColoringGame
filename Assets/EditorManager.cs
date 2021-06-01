@@ -41,6 +41,15 @@ public class EditorManager : MonoBehaviour
             }
         }
 
+        if(Input.GetMouseButtonDown(1) && !isMakeEdges)
+        {
+            Node node;
+            if(isOnNode(Input.mousePosition, out node))
+            {
+                Destroy(node.gameObject);
+            }
+        }
+
 
         if(Input.GetMouseButtonDown(0) && isMakeEdges)
         {
@@ -48,24 +57,34 @@ public class EditorManager : MonoBehaviour
             Node node;
             if(isOnNode(mousePos, out node))
             {
+                //selecting first node of edge, color it purple
                 if(edgeNode0 == null)
                 {
                     edgeNode0 = node;
                     edgeNode0.gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
                 }
+                // Can't connect node to itself, start over
                 else if(edgeNode0 == node)
                 {
                     edgeNode0.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
                     edgeNode0 = null;
                 }
+                // Selecting second node of edge, where it isn't same as the first node
                 else if(edgeNode0 != node && !edgeNode0.AdjNodesContains(node)
                     && !node.AdjNodesContains(edgeNode0))
                 {
                     edgeNode1 = node;
+
                     edgeNode1.gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
-                    Instantiate<Edge>(edgePrefab).Setup(edgeNode0, edgeNode1);
+
+                    Edge edge = Instantiate<Edge>(edgePrefab);
+                    edge.Setup(edgeNode0, edgeNode1);
+                    edgeNode0.AddToEdgeList(edge);
+                    edgeNode1.AddToEdgeList(edge);
+
                     edgeNode0.AddToAdjList(edgeNode1);
                     edgeNode1.AddToAdjList(edgeNode0);
+
                     edgeNode0.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
                     edgeNode1.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
                     edgeNode0 = null;
