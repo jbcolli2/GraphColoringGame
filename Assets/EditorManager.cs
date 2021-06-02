@@ -41,11 +41,12 @@ public class EditorManager : MonoBehaviour
             }
         }
 
-        if(Input.GetMouseButtonDown(1) && !isMakeEdges)
+        if(Input.GetMouseButtonDown(1))
         {
             Node node;
             if(isOnNode(Input.mousePosition, out node))
             {
+                nodes.Remove(node);
                 Destroy(node.gameObject);
             }
         }
@@ -55,10 +56,11 @@ public class EditorManager : MonoBehaviour
         {
             Vector3 mousePos = Input.mousePosition;
             Node node;
+            
             if(isOnNode(mousePos, out node))
             {
                 //selecting first node of edge, color it purple
-                if(edgeNode0 == null)
+                if (edgeNode0 == null)
                 {
                     edgeNode0 = node;
                     edgeNode0.gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
@@ -106,6 +108,7 @@ public class EditorManager : MonoBehaviour
 
         if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out rayHit))
         {
+            Debug.Log(rayHit.collider.gameObject);
             if (rayHit.collider.gameObject.GetComponent<Node>())
             {
                 outNode = rayHit.collider.gameObject.GetComponent<Node>();

@@ -39,4 +39,16 @@ public class ChangeGameUI : MonoBehaviour
             GameManager.instance.nodes = EditorManager.instance.nodes;
         }
     }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
+
+
+
 }

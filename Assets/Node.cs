@@ -62,6 +62,14 @@ public class Node : MonoBehaviour
         // We also need to tell the other nodes that they are not connected to this node anymore.
         foreach(Edge edge in edges)
         {
+            if(edge.GetNode0() == this)
+            {
+                edge.GetNode1().RemoveFromEdgeList(edge);
+            }
+            else
+            {
+                edge.GetNode0().RemoveFromEdgeList(edge);
+            }
             Destroy(edge.gameObject);
         }
 
@@ -104,6 +112,11 @@ public class Node : MonoBehaviour
     public void AddToEdgeList(Edge edge)
     {
         edges.Add(edge);
+    }
+
+    public void RemoveFromEdgeList(Edge edge)
+    {
+        edges.RemoveAll(item => item == edge);
     }
 
     

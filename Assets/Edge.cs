@@ -70,4 +70,9 @@ public class Edge : MonoBehaviour
     {
         return node0;
     }
+
+    public Node GetNode1()
+    {
+        return node1;
+    }
 }
