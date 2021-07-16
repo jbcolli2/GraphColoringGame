@@ -24,6 +24,18 @@ public class Edge : MonoBehaviour
     {
         this.node0 = node0;
         this.node1 = node1;
+
+        node0.AddToEdgeList(this);
+        node1.AddToEdgeList(this);
+
+        node0.AddToAdjList(node1);
+        node1.AddToAdjList(node0);
+    }
+
+    private void OnDestroy()
+    {
+        this.node0.RemoveFromEdgeList(this);
+        this.node1.RemoveFromEdgeList(this);
     }
 
 

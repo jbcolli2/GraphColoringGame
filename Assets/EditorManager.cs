@@ -19,11 +19,14 @@ public class EditorManager : MonoBehaviour
     Node edgeNode1 = null;
     Edge currentEdge;
 
+    Stack<Command> undoStack = new Stack<Command>();
+
+
+
+
     void Awake()
     {
         instance = this;
-
-        
     }
 
     // Update is called once per frame
@@ -38,6 +41,8 @@ public class EditorManager : MonoBehaviour
                 Vector3 tempPos = Camera.main.ScreenToWorldPoint(mousePos);
                 node.Setup(new Vector2(tempPos.x, tempPos.y));
                 nodes.Add(node);
+
+                undoStack.Push(new PlaceNode(node, nodes));
             }
         }
 
@@ -48,6 +53,14 @@ public class EditorManager : MonoBehaviour
             {
                 nodes.Remove(node);
                 Destroy(node.gameObject);
+            }
+            else
+            {
+                if(undoStack.Count > 0)
+                {
+                    Command undoCommand = undoStack.Pop();
+                    undoCommand.undo();
+                }
             }
         }
 
@@ -81,11 +94,8 @@ public class EditorManager : MonoBehaviour
 
                     Edge edge = Instantiate<Edge>(edgePrefab);
                     edge.Setup(edgeNode0, edgeNode1);
-                    edgeNode0.AddToEdgeList(edge);
-                    edgeNode1.AddToEdgeList(edge);
+                    undoStack.Push(new PlaceEdge(edge));
 
-                    edgeNode0.AddToAdjList(edgeNode1);
-                    edgeNode1.AddToAdjList(edgeNode0);
 
                     edgeNode0.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
                     edgeNode1.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
