@@ -36,6 +36,9 @@ public class Edge : MonoBehaviour
     {
         this.node0.RemoveFromEdgeList(this);
         this.node1.RemoveFromEdgeList(this);
+
+        node0.adjNodes.RemoveAll(x => x == node1);
+        node1.adjNodes.RemoveAll(x => x == node0);
     }
 
 

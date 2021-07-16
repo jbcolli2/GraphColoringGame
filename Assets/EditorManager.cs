@@ -54,13 +54,14 @@ public class EditorManager : MonoBehaviour
                 nodes.Remove(node);
                 Destroy(node.gameObject);
             }
-            else
+        }
+
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            if (undoStack.Count > 0)
             {
-                if(undoStack.Count > 0)
-                {
-                    Command undoCommand = undoStack.Pop();
-                    undoCommand.undo();
-                }
+                Command undoCommand = undoStack.Pop();
+                undoCommand.undo();
             }
         }
 
@@ -118,7 +119,6 @@ public class EditorManager : MonoBehaviour
 
         if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out rayHit))
         {
-            Debug.Log(rayHit.collider.gameObject);
             if (rayHit.collider.gameObject.GetComponent<Node>())
             {
                 outNode = rayHit.collider.gameObject.GetComponent<Node>();
