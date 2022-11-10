@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
 
 
 
-        //nodes = SetupGraph(adjMatrix);
+        nodes = SetupGraph(adjMatrix);
 
 
 

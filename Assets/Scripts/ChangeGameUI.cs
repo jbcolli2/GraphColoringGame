@@ -14,11 +14,15 @@ public class ChangeGameUI : MonoBehaviour
     [SerializeField]
     GameObject editorUI;
 
-
+    enum UIState : int
+    {
+        EDITOR = 1,
+        GAME = 0
+    };
 
     public void GameUIActive(int dropdown)
     {
-        if(dropdown == 0)
+        if((UIState)dropdown == UIState.EDITOR)
         {
             editorManager.gameObject.SetActive(true);
             editorUI.gameObject.SetActive(true);
@@ -28,7 +32,7 @@ public class ChangeGameUI : MonoBehaviour
 
             EditorManager.instance.nodes = GameManager.instance.nodes;
         }
-        else
+        else if((UIState)dropdown == UIState.GAME)
         {
             editorManager.gameObject.SetActive(false);
             editorUI.gameObject.SetActive(false);

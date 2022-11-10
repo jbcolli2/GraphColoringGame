@@ -58,7 +58,6 @@ public class Node : MonoBehaviour
 
     private void OnDestroy()
     {
-        Debug.Log("destroy node");
         // When a node gets destroyed, we need to also get rid of all the edges attached to it.
         // We also need to tell the other nodes that they are not connected to this node anymore.
         foreach(Edge edge in edges)
@@ -126,6 +125,7 @@ public class Node : MonoBehaviour
     {
         if(GameManager.instance.gameObject.activeSelf)
         {
+            print("Click on node");
             MakeGameMove();
         }
 
