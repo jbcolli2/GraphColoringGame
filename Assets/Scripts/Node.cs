@@ -118,7 +118,6 @@ public class Node : MonoBehaviour
     {
         if(GameManager.instance.gameObject.activeSelf)
         {
-            print("Click on node");
             MakeGameMove();
         }
 

@@ -46,6 +46,11 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Sprite circleColorSprite;
 
+    [SerializeField]
+    private HintScreen hintScreen;
+
+    private bool paused;
+
     public static GameManager instance { get; private set; }
 
 
@@ -71,14 +76,24 @@ public class GameManager : MonoBehaviour
 
     }
 
+    void Start()
+    {
+        paused = false;
+    }
+
 
 
 
 
     private void OnEnable()
     {
+        if (paused)
+        {
+            paused = false;
+            return;
+        }
         numColorsInput.text = numColors.ToString();
-        int[,] adj = CreateN11Adj(12);
+        int[,] adj = CreateN11Adj(11);
         // int[,] adj = CreateCatAdj();
 
 
@@ -123,7 +138,7 @@ public class GameManager : MonoBehaviour
         // Create nodes
         for (int ii = 0; ii < N; ++ii)
         {
-            Node node = Instantiate<Node>(nodePrefab);
+            Node node = Instantiate<Node>(nodePrefab, new Vector3(0,0,0), Quaternion.Euler(0,0, UnityEngine.Random.Range(0.0f, 360.0f)));
             nodes.Add(node);
         }
 
@@ -157,6 +172,12 @@ public class GameManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.R))
         {
             ResetGame();
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            paused = true;
+            hintScreen.gameObject.SetActive(true);
         }
     }
 

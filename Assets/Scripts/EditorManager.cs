@@ -135,11 +135,9 @@ public class EditorManager : MonoBehaviour
     bool isInGraphArea(Vector3 mousePos)
     {
         RaycastHit rayHit = new RaycastHit();
-        print("Is In Graph: " + Camera.main.ScreenPointToRay(mousePos));
 
         if (Physics.Raycast(Camera.main.ScreenPointToRay(mousePos), out rayHit))
         {
-            print("Rayhit");
             if(rayHit.collider.gameObject.GetComponent<SpriteMask>())
             {
                 return true;
