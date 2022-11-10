@@ -113,14 +113,7 @@ public class Node : MonoBehaviour
 
     
 
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        
-    }
-
+    
     private void OnMouseDown()
     {
         if(GameManager.instance.gameObject.activeSelf)

@@ -77,7 +77,9 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
+        numColorsInput.text = numColors.ToString();
         int[,] adj = CreateN11Adj(12);
+        // int[,] adj = CreateCatAdj();
 
 
 
